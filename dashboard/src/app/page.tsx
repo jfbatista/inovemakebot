@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { getSuppliers, getDestinations } from '@/lib/actions'
 import { Users, Smartphone, MessageSquare, ShieldCheck } from 'lucide-react'
 

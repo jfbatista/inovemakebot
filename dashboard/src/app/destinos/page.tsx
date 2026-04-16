@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { getDestinations, addDestination, deleteDestination, toggleDestinationStatus } from '@/lib/actions'
 import { Plus, Trash2, Smartphone, User as UserIcon } from 'lucide-react'
 

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { getSuppliers, addSupplier, deleteSupplier, toggleSupplierStatus } from '@/lib/actions'
 import { Plus, Trash2, Search, Phone, User as UserIcon } from 'lucide-react'
 

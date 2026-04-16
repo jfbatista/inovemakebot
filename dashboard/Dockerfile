@@ -1,27 +1,33 @@
-# ── Stage 1: Dependências ────────────────────────────────────
+# ── Stage 1: Dependências de produção ────────────────────────
 FROM node:20-alpine AS deps
 WORKDIR /app
 
-# Instala dependências nativas necessárias
 RUN apk add --no-cache libc6-compat openssl
 
 COPY package.json package-lock.json ./
+# Instala APENAS prod deps para o runner final
 RUN npm ci --omit=dev
 
 # ── Stage 2: Build ───────────────────────────────────────────
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Copia dependências do stage anterior
-COPY --from=deps /app/node_modules ./node_modules
+RUN apk add --no-cache libc6-compat openssl
+
+# Instala TODAS as deps (incluindo devDependencies como lightningcss/tailwind)
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Copia código fonte
 COPY . .
 
 # Gera o Prisma Client
 RUN npx prisma generate
 
-# Variáveis de build (não são segredos, apenas para o build)
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+# DATABASE_URL placeholder apenas para o build não falhar sem DB
+ENV DATABASE_URL=postgresql://placeholder:placeholder@localhost:5432/placeholder
 
 RUN npm run build
 
@@ -32,15 +38,20 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN apk add --no-cache openssl
 
-# Copia apenas os arquivos necessários para rodar
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Prisma Client para runtime
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=deps /app/node_modules/pg ./node_modules/pg
+COPY --from=deps /app/node_modules/pg-pool ./node_modules/pg-pool
 
 USER nextjs
 
@@ -50,3 +61,4 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]
+
