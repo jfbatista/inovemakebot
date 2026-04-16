@@ -96,16 +96,19 @@ services:
       - "3000:3000"
     depends_on:
       - postgres
+    volumes:
+      - ./dashboard/src:/app/src
     networks:
       - inove_net
     develop:
       watch:
+        - action: sync
+          path: ./dashboard/src
+          target: /app/src
         - action: rebuild
           path: ./dashboard/package.json
         - action: rebuild
           path: ./dashboard/prisma
-        - action: rebuild
-          path: ./dashboard/src
 
 
 networks:
