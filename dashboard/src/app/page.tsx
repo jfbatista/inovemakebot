@@ -1,16 +1,17 @@
 export const dynamic = 'force-dynamic'
 
-import { getSuppliers, getDestinations } from '@/lib/actions'
+import { getSuppliers, getDestinations, getMessageCountToday } from '@/lib/actions'
 import { Users, Smartphone, MessageSquare, ShieldCheck } from 'lucide-react'
 
 export default async function Home() {
   const suppliers = await getSuppliers()
   const destinations = await getDestinations()
+  const messagesToday = await getMessageCountToday()
 
   const stats = [
     { label: 'Fornecedores', value: suppliers.length, icon: Users, color: 'text-blue-500', bg: 'bg-blue-500/10' },
     { label: 'Destinos', value: destinations.length, icon: Smartphone, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-    { label: 'Encaminhamentos (Hoje)', value: 0, icon: MessageSquare, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+    { label: 'Encaminhamentos (Hoje)', value: messagesToday, icon: MessageSquare, color: 'text-purple-500', bg: 'bg-purple-500/10' },
   ]
 
   return (

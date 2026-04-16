@@ -70,3 +70,26 @@ export async function toggleDestinationStatus(id: string, currentStatus: boolean
   })
   revalidatePath('/destinos')
 }
+
+export async function getMessageCountToday() {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  try {
+    const result = await prisma.messageLog.aggregate({
+      _sum: {
+        destinationsCount: true
+      },
+      where: {
+        createdAt: {
+          gte: today
+        }
+      }
+    })
+
+    return result._sum.destinationsCount || 0
+  } catch (error) {
+    console.error('Error fetching today count:', error)
+    return 0
+  }
+}

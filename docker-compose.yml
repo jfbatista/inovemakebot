@@ -98,6 +98,15 @@ services:
       - postgres
     networks:
       - inove_net
+    develop:
+      watch:
+        - action: rebuild
+          path: ./dashboard/package.json
+        - action: rebuild
+          path: ./dashboard/prisma
+        - action: rebuild
+          path: ./dashboard/src
+
 
 networks:
   inove_net:
