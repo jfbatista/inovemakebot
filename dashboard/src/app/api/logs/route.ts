@@ -18,6 +18,10 @@ export async function POST(request: Request) {
       }
     })
 
+    // Emitir evento para atualizar dashboard em tempo real
+    const { eventEmitter } = require('@/lib/events')
+    eventEmitter.emit('stats-update')
+
     return NextResponse.json(log)
   } catch (error) {
     console.error('Error creating log:', error)
