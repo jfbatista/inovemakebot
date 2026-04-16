@@ -1,0 +1,6 @@
+{
+  "instanceName": "inove-bot-new",
+  "token": "inove-token",
+  "integration": "WHATSAPP-BAILEYS",
+  "qrcode": true
+}

@@ -1,0 +1,145 @@
+{
+  "id": "inove-workflow-v1",
+  "name": "InoveMakeBot Workflow",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-inove",
+        "options": {}
+      },
+      "id": "webhook-node",
+      "name": "Evolution API Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.NEXT_PUBLIC_API_URL }}/api/check",
+        "qs": {
+          "phone": "={{ $node[\"Evolution API Webhook\"].json[\"data\"][\"key\"][\"remoteJid\"].split(\"@\")[0] }}"
+        },
+        "options": {}
+      },
+      "id": "check-api-node",
+      "name": "Validar Fornecedor",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $node[\"Validar Fornecedor\"].json[\"isSupplier\"] }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "if-supplier-node",
+      "name": "É Fornecedor?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "destinations",
+        "options": {}
+      },
+      "id": "split-destinations-node",
+      "name": "Lista de Destinos",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.EVOLUTION_SERVER_URL }}/message/sendText/{{ $env.INSTANCE_NAME }}",
+        "sendBody": true,
+        "specifyHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.EVOLUTION_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $node[\"Lista de Destinos\"].json[\"value\"] }}"
+            },
+            {
+              "name": "text",
+              "value": "=*De: {{ $node[\"Validar Fornecedor\"].json[\"supplierName\"] || \"Desconhecido\" }}*\\n\\n{{ $node[\"Evolution API Webhook\"].json[\"data\"][\"message\"][\"conversation\"] || $node[\"Evolution API Webhook\"].json[\"data\"][\"message\"]?.[\"extendedTextMessage\"]?.[\"text\"] || \"[Mídia Recebida]\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-message-node",
+      "name": "Encaminhar Mensagem",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1100, 200]
+    }
+  ],
+  "connections": {
+    "Evolution API Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validar Fornecedor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Fornecedor": {
+      "main": [
+        [
+          {
+            "node": "É Fornecedor?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "É Fornecedor?": {
+      "main": [
+        [
+          {
+            "node": "Lista de Destinos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lista de Destinos": {
+      "main": [
+        [
+          {
+            "node": "Encaminhar Mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "webhook": {
+    "enabled": true,
+    "url": "http://inove_n8n:5678/webhook/webhook-inove",
+    "events": [
+      "MESSAGES_UPSERT",
+      "MESSAGES_UPDATE",
+      "SEND_MESSAGE",
+      "CONNECTION_UPDATE"
+    ]
+  }
+}

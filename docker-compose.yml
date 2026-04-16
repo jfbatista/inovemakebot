@@ -1,0 +1,108 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: inove_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - inove_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: inove_redis
+    restart: always
+    networks:
+      - inove_net
+
+  evolution:
+    image: evoapicloud/evolution-api:latest
+    container_name: inove_evolution
+    restart: always
+    environment:
+      - SERVER_PORT=8080
+      - SERVER_URL=${SERVER_URL}
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_CONNECTION_URI=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${EVOLUTION_DB_NAME}?schema=public
+      - DATABASE_CONNECTION_CLIENT_NAME=evolution_api
+      - DEPLOY=true
+      - CACHE_REDIS_ENABLED=true
+      - CACHE_REDIS_URI=redis://redis:6379
+      - CACHE_REDIS_PREFIX=EVOLUTION
+      - AUTHENTICATION_API_KEY=${EVOLUTION_API_KEY}
+      - AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES=true
+      - INTEGRATIONS=null
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - inove_net
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: inove_n8n
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=inove_n8n_db
+      - DB_POSTGRESDB_USER=${DB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD}
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=${N8N_PORT}
+      - N8N_PROTOCOL=http
+      - N8N_WEBHOOK_URL=${N8N_WEBHOOK_URL}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - EVOLUTION_SERVER_URL=${EVOLUTION_INTERNAL_URL}
+      - INSTANCE_NAME=${INSTANCE_NAME}
+      - EVOLUTION_API_KEY=${EVOLUTION_API_KEY}
+      - N8N_BLOCK_ENV_ACCESS_IN_EXPRESSIONS=false
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+      - N8N_BLOCK_ENV_ACCESS_FOR_JS=false
+      - N8N_BLOCK_ENV_ACCESS_JS=false
+      - N8N_VARIABLE_BLOCKLIST=
+      - N8N_SECURE_COOKIE=false
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./automation:/home/node/automation
+    ports:
+      - "5678:5678"
+    depends_on:
+      - postgres
+    networks:
+      - inove_net
+
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: inove_dashboard
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}?schema=public
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXT_PUBLIC_API_URL=http://inove_dashboard:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    networks:
+      - inove_net
+
+networks:
+  inove_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  n8n_data:
