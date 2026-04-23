@@ -12,6 +12,7 @@ export async function GET(request: Request) {
   try {
     // 1. Normalizar o telefone (remover @s.whatsapp.net e caracteres não numéricos)
     const cleanPhone = phone.split('@')[0].replace(/\D/g, '')
+    console.log(`[Validation] Received: ${phone}, Cleaned: ${cleanPhone}`)
     
     // Gerar variantes para lidar com o nono dígito brasileiro (DDI 55)
     const phoneVariants = [cleanPhone]
@@ -28,6 +29,8 @@ export async function GET(request: Request) {
         phoneVariants.push(`55${ddd}9${rest}`)
       }
     }
+    
+    console.log(`[Validation] Variants to check: ${phoneVariants.join(', ')}`)
 
     // 1. Verificar se o remetente é um fornecedor ativo usando as variantes
     const supplier = await prisma.supplier.findFirst({
@@ -36,6 +39,8 @@ export async function GET(request: Request) {
         active: true
       }
     })
+
+    console.log(`[Validation] Match found: ${supplier ? supplier.name : 'NONE'}`)
 
     if (!supplier) {
       return NextResponse.json({ 

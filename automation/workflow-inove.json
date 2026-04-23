@@ -1,40 +1,61 @@
 {
-  "id": "inove-workflow-v1",
+  "id": "inove-workflow-v4-final",
   "name": "InoveMakeBot Workflow",
   "active": true,
   "nodes": [
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "webhook-inove",
+        "path": "webhook-inove-bot",
         "options": {}
       },
       "id": "webhook-node",
-      "name": "Evolution API Webhook",
+      "name": "EvolutionWebhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [250, 300]
+      "position": [0, 300]
     },
     {
       "parameters": {
-        "url": "={{ $env.NEXT_PUBLIC_API_URL }}/api/check",
-        "qs": {
-          "phone": "={{ $node[\"Evolution API Webhook\"].json[\"data\"][\"key\"][\"remoteJid\"].split(\"@\")[0] }}"
-        },
+        "jsCode": "const item = $input.item.json;\nconst data = item.body?.data || item.data || item || {};\nconst message = data.message || {};\nconst phone = data.key?.remoteJid?.split('@')[0] || '';\n\nlet media_info = {\n  mediatype: 'text',\n  mimetype: '',\n  media: '',\n  fileName: '',\n  text: message.conversation || message.extendedTextMessage?.text || \"\"\n};\n\nif (message.audioMessage) {\n  media_info.mediatype = 'audio';\n  media_info.mimetype = message.audioMessage.mimetype;\n  media_info.media = message.audioMessage.url || message.audioMessage.base64 || data.base64 || item.base64;\n} else if (message.imageMessage) {\n  media_info.mediatype = 'image';\n  media_info.mimetype = message.imageMessage.mimetype;\n  media_info.media = message.imageMessage.url || message.imageMessage.base64 || data.base64 || item.base64;\n  media_info.text = message.imageMessage.caption || \"\";\n} else if (message.documentMessage) {\n  media_info.mediatype = 'document';\n  media_info.mimetype = message.documentMessage.mimetype;\n  media_info.media = message.documentMessage.url || message.documentMessage.base64 || data.base64 || item.base64;\n  media_info.fileName = message.documentMessage.fileName || \"\";\n  media_info.text = message.documentMessage.caption || \"\";\n}\n\nreturn {\n  json: {\n    ...item,\n    phone_to_check: phone,\n    media_info: media_info\n  }\n};"
+      },
+      "id": "code-node",
+      "name": "Preparar Dados (JS)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "=http://inove_dashboard:3000/api/check?phone={{ $json.phone_to_check }}",
         "options": {}
       },
       "id": "check-api-node",
       "name": "Validar Fornecedor",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [450, 300]
+      "position": [400, 450]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {
+          "clashHandling": "preferLast"
+        }
+      },
+      "id": "merge-node",
+      "name": "Merge Dados",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [600, 300]
     },
     {
       "parameters": {
         "conditions": {
           "boolean": [
             {
-              "value1": "={{ $node[\"Validar Fornecedor\"].json[\"isSupplier\"] }}",
+              "value1": "={{ $json[\"isSupplier\"] }}",
               "value2": true
             }
           ]
@@ -44,34 +65,58 @@
       "name": "É Fornecedor?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [650, 300]
+      "position": [800, 300]
     },
     {
       "parameters": {
         "fieldToSplitOut": "destinations",
+        "include": "all",
         "options": {}
       },
       "id": "split-destinations-node",
       "name": "Lista de Destinos",
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
-      "position": [850, 200]
+      "position": [1000, 200]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.media_info.mediatype }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "text"
+            },
+            {
+              "value2": "audio"
+            },
+            {
+              "value2": "image"
+            },
+            {
+              "value2": "document"
+            }
+          ]
+        }
+      },
+      "id": "switch-media-node",
+      "name": "Tipo de Mensagem",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [1200, 200]
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $env.EVOLUTION_SERVER_URL }}/message/sendText/{{ $env.INSTANCE_NAME }}",
+        "url": "http://inove_evolution:8080/message/sendText/inove-teste",
         "sendBody": true,
         "specifyHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "apikey",
-              "value": "={{ $env.EVOLUTION_API_KEY }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
+              "value": "4224A8D3-5B5E-4B0F-8C7E-D9A3B5E0C2A1"
             }
           ]
         },
@@ -79,27 +124,127 @@
           "parameters": [
             {
               "name": "number",
-              "value": "={{ $node[\"Lista de Destinos\"].json[\"value\"] }}"
+              "value": "={{ $json[\"destinations\"] }}"
             },
             {
               "name": "text",
-              "value": "=*De: {{ $node[\"Validar Fornecedor\"].json[\"supplierName\"] || \"Desconhecido\" }}*\\n\\n{{ $node[\"Evolution API Webhook\"].json[\"data\"][\"message\"][\"conversation\"] || $node[\"Evolution API Webhook\"].json[\"data\"][\"message\"]?.[\"extendedTextMessage\"]?.[\"text\"] || \"[Mídia Recebida]\" }}"
+              "value": "=*De: {{ $json[\"supplierName\"] }}*\\n\\n{{ $json.media_info.text }}"
             }
           ]
         },
         "options": {}
       },
-      "id": "send-message-node",
-      "name": "Encaminhar Mensagem",
+      "id": "send-text-node",
+      "name": "Encaminhar Texto",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1100, 200]
+      "position": [1450, 50]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://inove_evolution:8080/message/sendWhatsAppAudio/inove-teste",
+        "sendBody": true,
+        "specifyHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "4224A8D3-5B5E-4B0F-8C7E-D9A3B5E0C2A1"
+            }
+          ]
+        },
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $json[\"destinations\"] }}"
+            },
+            {
+              "name": "audio",
+              "value": "={{ $json.media_info.media }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-audio-node",
+      "name": "Encaminhar Áudio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1450, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://inove_evolution:8080/message/sendMedia/inove-teste",
+        "sendBody": true,
+        "specifyHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "4224A8D3-5B5E-4B0F-8C7E-D9A3B5E0C2A1"
+            }
+          ]
+        },
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $json[\"destinations\"] }}"
+            },
+            {
+              "name": "mediatype",
+              "value": "={{ $json.media_info.mediatype }}"
+            },
+            {
+              "name": "mimetype",
+              "value": "={{ $json.media_info.mimetype }}"
+            },
+            {
+              "name": "media",
+              "value": "={{ $json.media_info.media }}"
+            },
+            {
+              "name": "fileName",
+              "value": "={{ $json.media_info.fileName }}"
+            },
+            {
+              "name": "caption",
+              "value": "=*De: {{ $json[\"supplierName\"] }}*\\n\\n{{ $json.media_info.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-media-node",
+      "name": "Encaminhar Midia",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1450, 350]
     }
   ],
   "connections": {
-    "Evolution API Webhook": {
+    "EvolutionWebhook": {
       "main": [
         [
+          {
+            "node": "Preparar Dados (JS)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Dados (JS)": {
+      "main": [
+        [
+          {
+            "node": "Merge Dados",
+            "type": "main",
+            "index": 0
+          },
           {
             "node": "Validar Fornecedor",
             "type": "main",
@@ -109,6 +254,17 @@
       ]
     },
     "Validar Fornecedor": {
+      "main": [
+        [
+          {
+            "node": "Merge Dados",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Dados": {
       "main": [
         [
           {
@@ -134,7 +290,39 @@
       "main": [
         [
           {
-            "node": "Encaminhar Mensagem",
+            "node": "Tipo de Mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tipo de Mensagem": {
+      "main": [
+        [
+          {
+            "node": "Encaminhar Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Encaminhar Áudio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Encaminhar Midia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Encaminhar Midia",
             "type": "main",
             "index": 0
           }

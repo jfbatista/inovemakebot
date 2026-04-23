@@ -1,0 +1,6 @@
+{
+  "instanceName": "inove-teste",
+  "token": "inove-token",
+  "integration": "WHATSAPP-BAILEYS",
+  "qrcode": true
+}
