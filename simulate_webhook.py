@@ -40,7 +40,7 @@ def send_test_message(phone="5561984498130", msg_type="text", msg_id="TEST_ID_12
             }
         }
 
-    url = 'http://192.168.0.44:5678/webhook/inove'
+    url = 'http://192.168.0.44:5678/webhook/iHgQYMXSvsgGoRIz/webhook/inove'
     
     print(f"Enviando teste de {msg_type} para {url}...")
     

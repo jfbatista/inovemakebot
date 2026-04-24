@@ -43,6 +43,7 @@ export async function GET(request: Request) {
     console.log(`[Validation] Match found: ${supplier ? supplier.name : 'NONE'}`)
 
     if (!supplier) {
+      console.log(`[Validation] No active supplier found for variants: ${phoneVariants.join(', ')}`)
       return NextResponse.json({ 
         isSupplier: false, 
         destinations: [] 
@@ -54,6 +55,8 @@ export async function GET(request: Request) {
       where: { active: true },
       select: { phone: true }
     })
+
+    console.log(`[Validation] Found ${destinations.length} active destinations`)
 
     return NextResponse.json({
       isSupplier: true,

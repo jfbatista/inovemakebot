@@ -1,0 +1,200 @@
+[1m[37m[Evolution API][0m [1m[37m  [1m[37m v2.3.7 [1m[37m 177 [0m [1m[37m - [1m[37m Thu Apr 23 2026 16:04:39   [0m [37m[47m[1m VERBOSE [0m [33m[1m [OnWhatsappCache][0m [37m[1m [string][0m [37m [saveOnWhatsappCache] Register exists for [5561992966680@s.whatsapp.net,556192966680@s.whatsapp.net,275311950327897@lid]? => 556192966680@s.whatsapp.net [0m
+[1m[37m[Evolution API][0m [1m[37m  [1m[37m v2.3.7 [1m[37m 177 [0m [1m[37m - [1m[37m Thu Apr 23 2026 16:04:39   [0m [37m[47m[1m VERBOSE [0m [33m[1m [OnWhatsappCache][0m [37m[1m [string][0m [37m [saveOnWhatsappCache] Data for 556192966680@s.whatsapp.net is already up-to-date. Skipping update. [0m
+[1m[36m[Evolution API][0m [1m[36m [inove-teste] [1m[36m v2.3.7 [1m[36m 177 [0m [1m[36m - [1m[37m Thu Apr 23 2026 16:04:39   [0m [36m[46m[1m DEBUG [0m [33m[1m [ChannelStartupService][0m [36m[1m [string][0m [36m Updating contact: {
+  "id": "556192966680@s.whatsapp.net",
+  "notify": "Marlon"
+} [0m
+[1m[37m[Evolution API][0m [1m[37m [inove-teste] [1m[37m v2.3.7 [1m[37m 177 [0m [1m[37m - [1m[37m Thu Apr 23 2026 16:06:00   [0m [37m[47m[1m VERBOSE [0m [33m[1m [ChannelStartupService][0m [37m[1m [string][0m [37m Update messages [
+  {
+    "key": {
+      "remoteJid": "197358210019368@lid",
+      "id": "3EB0C3777ECA59CE1539EB",
+      "fromMe": false
+    },
+    "update": {
+      "status": 4
+    }
+  }
+] [0m
+CACHE: {
+  cached: null,
+  updateKey: '06664ecf-37c3-44ad-b11f-71342aee8a65_3EB0C3777ECA59CE1539EB_4',
+  messageTimestamp: undefined,
+  secondsSinceEpoch: 1776971160
+}
+[1m[32m[Evolution API][0m [1m[32m [inove-teste] [1m[32m v2.3.7 [1m[32m 177 [0m [1m[32m - [1m[37m Thu Apr 23 2026 16:06:00   [0m [32m[42m[1m LOG [0m [33m[1m [ChannelStartupService][0m [32m[1m [string][0m [32m Update as read in message.update 197358210019368@lid - 1776970475 [0m
+CB:call {
+  tag: 'call',
+  attrs: {
+    from: '275311950327897@lid',
+    version: '2.26.14.76',
+    platform: 'iphone',
+    id: '1776971100-9',
+    notify: 'Marlon',
+    e: '0',
+    t: '1776971166'
+  },
+  content: [ { tag: 'offer', attrs: [Object], content: [Array] } ]
+}
+CB:call {
+  tag: 'call',
+  attrs: { from: '275311950327897@lid', id: '1776971100-10', t: '1776971166' },
+  content: [ { tag: 'relaylatency', attrs: [Object], content: [Array] } ]
+}
+CB:call {
+  tag: 'call',
+  attrs: { from: '275311950327897@lid', id: '1776971100-11', t: '1776971166' },
+  content: [ { tag: 'relaylatency', attrs: [Object], content: [Array] } ]
+}
+CB:call {
+  tag: 'call',
+  attrs: { from: '275311950327897@lid', id: '1776971100-12', t: '1776971166' },
+  content: [ { tag: 'relaylatency', attrs: [Object], content: [Array] } ]
+}
+CB:call {
+  tag: 'call',
+  attrs: { from: '275311950327897@lid', id: '1776971100-13', t: '1776971181' },
+  content: [ { tag: 'terminate', attrs: [Object], content: undefined } ]
+}
+CB:call {
+  tag: 'call',
+  attrs: {
+    from: '230850264301744@lid',
+    version: '2.26.14.74',
+    platform: 'android',
+    id: '73D74D7EF0F81F4E96EBCBDC8B8D53C0',
+    t: '1776971181'
+  },
+  content: [ { tag: 'accept', attrs: [Object], content: [Array] } ]
+}
+[1m[37m[Evolution API][0m [1m[37m [inove-teste] [1m[37m v2.3.7 [1m[37m 177 [0m [1m[37m - [1m[37m Thu Apr 23 2026 16:06:55   [0m [37m[47m[1m VERBOSE [0m [33m[1m [ChannelStartupService][0m [37m[1m [string][0m [37m Update messages [
+  {
+    "key": {
+      "remoteJid": "275311950327897@lid",
+      "id": "3EB0E698ADEFA981C91779",
+      "fromMe": false
+    },
+    "update": {
+      "status": 4
+    }
+  }
+] [0m
+CACHE: {
+  cached: null,
+  updateKey: '06664ecf-37c3-44ad-b11f-71342aee8a65_3EB0E698ADEFA981C91779_4',
+  messageTimestamp: undefined,
+  secondsSinceEpoch: 1776971215
+}
+[1m[32m[Evolution API][0m [1m[32m [inove-teste] [1m[32m v2.3.7 [1m[32m 177 [0m [1m[32m - [1m[37m Thu Apr 23 2026 16:06:55   [0m [32m[42m[1m LOG [0m [33m[1m [ChannelStartupService][0m [32m[1m [string][0m [32m Update as read in message.update 275311950327897@lid - 1776971079 [0m
+[1m[32m[Evolution API][0m [1m[32m [inove-teste] [1m[32m v2.3.7 [1m[32m 177 [0m [1m[32m - [1m[37m Thu Apr 23 2026 16:07:06   [0m [32m[42m[1m LOG [0m [33m[1m [ChannelStartupService][0m [32m[1m [string][0m [32m Update readed messages 197358210019368@lid - 1776971225 [0m
+[1m[37m[Evolution API][0m [1m[37m [inove-teste] [1m[37m v2.3.7 [1m[37m 177 [0m [1m[37m - [1m[37m Thu Apr 23 2026 16:07:06   [0m [37m[47m[1m VERBOSE [0m [33m[1m [ChannelStartupService][0m [37m[1m [object][0m [37m  [0m
+{
+  key: {
+    remoteJid: '197358210019368@lid',
+    remoteJidAlt: '556191278674@s.whatsapp.net',
+    fromMe: true,
+    id: 'ACFC49E5D9612CD5D75283C21E04B11F',
+    participant: '',
+    participantAlt: undefined,
+    addressingMode: 'lid'
+  },
+  pushName: 'Jfbatista',
+  status: 'SERVER_ACK',
+  message: { conversation: 'Cheguei' },
+  contextInfo: undefined,
+  messageType: 'conversation',
+  messageTimestamp: 1776971225,
+  instanceId: '06664ecf-37c3-44ad-b11f-71342aee8a65',
+  source: 'android'
+} 
+
+{
+  key: {
+    remoteJid: '556191278674@s.whatsapp.net',
+    remoteJidAlt: '556191278674@s.whatsapp.net',
+    fromMe: true,
+    id: 'ACFC49E5D9612CD5D75283C21E04B11F',
+    participant: '',
+    participantAlt: undefined,
+    addressingMode: 'lid'
+  },
+  pushName: 'Jfbatista',
+  status: 'SERVER_ACK',
+  message: { conversation: 'Cheguei' },
+  contextInfo: undefined,
+  messageType: 'conversation',
+  messageTimestamp: 1776971225,
+  instanceId: '06664ecf-37c3-44ad-b11f-71342aee8a65',
+  source: 'android'
+}
+[1m[32m[Evolution API][0m [1m[32m  [1m[32m v2.3.7 [1m[32m 177 [0m [1m[32m - [1m[37m Thu Apr 23 2026 16:07:06   [0m [32m[42m[1m LOG [0m [33m[1m [WebhookController][0m [32m[1m [object][0m [32m  [0m
+{
+  local: 'p.sendData-Webhook',
+  url: 'http://inove_n8n:5678/webhook/inove',
+  event: 'messages.upsert',
+  instance: 'inove-teste',
+  data: {
+    key: {
+      remoteJid: '556191278674@s.whatsapp.net',
+      remoteJidAlt: '556191278674@s.whatsapp.net',
+      fromMe: true,
+      id: 'ACFC49E5D9612CD5D75283C21E04B11F',
+      participant: '',
+      participantAlt: undefined,
+      addressingMode: 'lid'
+    },
+    pushName: 'Jfbatista',
+    status: 'SERVER_ACK',
+    message: { conversation: 'Cheguei' },
+    contextInfo: undefined,
+    messageType: 'conversation',
+    messageTimestamp: 1776971225,
+    instanceId: '06664ecf-37c3-44ad-b11f-71342aee8a65',
+    source: 'android'
+  },
+  destination: 'http://inove_n8n:5678/webhook/inove',
+  date_time: '2026-04-23T16:07:06.262Z',
+  sender: '556184498130@s.whatsapp.net',
+  server_url: 'http://192.168.0.44:8080',
+  apikey: 'inove-token'
+} 
+
+[1m[37m[Evolution API][0m [1m[37m  [1m[37m v2.3.7 [1m[37m 177 [0m [1m[37m - [1m[37m Thu Apr 23 2026 16:07:06   [0m [37m[47m[1m VERBOSE [0m [33m[1m [OnWhatsappCache][0m [37m[1m [string][0m [37m [saveOnWhatsappCache] Register exists for [5561991278674@s.whatsapp.net,556191278674@s.whatsapp.net]? => 556191278674@s.whatsapp.net [0m
+[1m[37m[Evolution API][0m [1m[37m  [1m[37m v2.3.7 [1m[37m 177 [0m [1m[37m - [1m[37m Thu Apr 23 2026 16:07:06   [0m [37m[47m[1m VERBOSE [0m [33m[1m [OnWhatsappCache][0m [37m[1m [string][0m [37m [saveOnWhatsappCache] Register exists, updating: remoteJid=556191278674@s.whatsapp.net, jidOptions=197358210019368@lid,556191278674@s.whatsapp.net,5561991278674@s.whatsapp.net, lid=lid [0m
+[1m[37m[Evolution API][0m [1m[37m [inove-teste] [1m[37m v2.3.7 [1m[37m 177 [0m [1m[37m - [1m[37m Thu Apr 23 2026 16:07:06   [0m [37m[47m[1m VERBOSE [0m [33m[1m [ChannelStartupService][0m [37m[1m [string][0m [37m Update messages [
+  {
+    "key": {
+      "remoteJid": "197358210019368@lid",
+      "id": "ACFC49E5D9612CD5D75283C21E04B11F",
+      "fromMe": true
+    },
+    "update": {
+      "status": 3
+    }
+  }
+] [0m
+CACHE: {
+  cached: null,
+  updateKey: '06664ecf-37c3-44ad-b11f-71342aee8a65_ACFC49E5D9612CD5D75283C21E04B11F_3',
+  messageTimestamp: undefined,
+  secondsSinceEpoch: 1776971226
+}
+[1m[37m[Evolution API][0m [1m[37m [inove-teste] [1m[37m v2.3.7 [1m[37m 177 [0m [1m[37m - [1m[37m Thu Apr 23 2026 16:08:07   [0m [37m[47m[1m VERBOSE [0m [33m[1m [ChannelStartupService][0m [37m[1m [string][0m [37m Update messages [
+  {
+    "key": {
+      "remoteJid": "275311950327897@lid",
+      "id": "3EB0E698ADEFA981C91779",
+      "fromMe": false
+    },
+    "update": {
+      "status": 5
+    }
+  }
+] [0m
+CACHE: {
+  cached: null,
+  updateKey: '06664ecf-37c3-44ad-b11f-71342aee8a65_3EB0E698ADEFA981C91779_5',
+  messageTimestamp: undefined,
+  secondsSinceEpoch: 1776971287
+}
+[1m[34m[Evolution API][0m [1m[34m [inove-teste] [1m[34m v2.3.7 [1m[34m 177 [0m [1m[34m - [1m[37m Thu Apr 23 2026 16:08:07   [0m [34m[44m[1m INFO [0m [33m[1m [ChannelStartupService][0m [34m[1m [string][0m [34m Update readed messages duplicated ignored in message.update [avoid deadlock]: 275311950327897@lid_1776971079_false [0m

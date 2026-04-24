@@ -18,6 +18,8 @@ services:
     image: redis:7-alpine
     container_name: inove_redis
     restart: always
+    volumes:
+      - redis_data:/data
     networks:
       - inove_net
 
@@ -38,6 +40,8 @@ services:
       - AUTHENTICATION_API_KEY=${EVOLUTION_API_KEY}
       - AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES=true
       - INTEGRATIONS=null
+    volumes:
+      - evolution_instances:/evolution/instances
     ports:
       - "8080:8080"
     depends_on:
@@ -54,6 +58,7 @@ services:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
+      - N8N_LOG_LEVEL=debug
       - DB_POSTGRESDB_DATABASE=inove_n8n_db
       - DB_POSTGRESDB_USER=${DB_USER}
       - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD}
@@ -118,3 +123,5 @@ networks:
 volumes:
   postgres_data:
   n8n_data:
+  evolution_instances:
+  redis_data:
